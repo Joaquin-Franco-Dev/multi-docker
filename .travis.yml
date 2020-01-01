@@ -1,0 +1,15 @@
+    script:
+      - docker run -e CI=true LinuxBeginner2016/react-test npm test
+
+    after_success:
+      - docker build -t LinuxBeginner2016/multi-client ./client
+      - docker build -t LinuxBeginner2016/mulit-nginx ./nginx
+      - docker build -t LinuxBeginner2016/mulit-server ./server
+      - docker build -t LinuxBeginner2016/mulit-workder ./worker
+      # Log in to the docker CLI
+      - echo "$DOCKER_PASSWORD" | docker login -u "$DOCKER_ID" --password-stdin
+      # Take those images and push them to docker hub
+      - docker push LinuxBeginner2016/multi-client
+      - docker push LinuxBeginner2016/mulit-nginx
+      - docker push LinuxBeginner2016/mulit-server
+      - docker push LinuxBeginner2016/mulit-worker
